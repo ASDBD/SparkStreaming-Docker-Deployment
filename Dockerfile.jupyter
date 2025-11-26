@@ -1,0 +1,10 @@
+FROM jupyter/pyspark-notebook:latest
+
+# Switch to root to install packages
+USER root
+
+# Upgrade PySpark to match the version in apache/spark:latest (likely 4.0.x)
+RUN pip install --no-cache-dir --upgrade pyspark
+
+# Switch back to the default user
+USER ${NB_UID}

@@ -28,7 +28,7 @@ services:
       dockerfile: Dockerfile.jupyter
     container_name: jupyter-notebook
     ports:
-      - '8889:8888'
+      - '8888:8888'
     environment:
       - SPARK_MASTER=spark://spark-master:7077
     command: start-notebook.sh --IdentityProvider.token='' --IdentityProvider.password=''

@@ -1,10 +1,15 @@
-FROM jupyter/pyspark-notebook:latest
+FROM quay.io/jupyter/minimal-notebook:latest
 
-# Switch to root to install packages
+# Versione di Spark: deve essere identica a quella dei container master/worker (vedi docker-compose.yml)
+ARG SPARK_VERSION=4.3.0
+
+# Java 21 (stessa versione dell'immagine apache/spark) e PySpark
 USER root
-
-# Upgrade PySpark to match the version in apache/spark:latest (likely 4.0.x)
-RUN pip install --no-cache-dir --upgrade pyspark
-
-# Switch back to the default user
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends openjdk-21-jre-headless \
+ && rm -rf /var/lib/apt/lists/*
 USER ${NB_UID}
+RUN pip install --no-cache-dir "pyspark==${SPARK_VERSION}"
+
+# Jupyter senza token né password: ok solo perché la porta è esposta solo su localhost
+CMD ["start-notebook.py", "--IdentityProvider.token=", "--ServerApp.password="]
